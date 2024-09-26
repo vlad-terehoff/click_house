@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8.4.13-alpine
+    restart: always
+    ports:
+      - "8123:8123" # HTTP-порт для запросов к ClickHouse
+      - "9000:9000" # Native-порт для запросов к ClickHouse
+    volumes:
+      - ./config.d:/etc/clickhouse-server/config.d # Файлы конфигурации
+      - ./users.d:/etc/clickhouse-server/users.d # Файлы настроек пользователей
+    environment:
+      - CLICKHOUSE_CONFIG=/etc/clickhouse-server/config.d # Путь к файлам конфигурации
+    networks:
+      - clickhouse-network
+
+networks:
+  clickhouse-network:
+    driver: bridge
+
